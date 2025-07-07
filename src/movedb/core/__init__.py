@@ -1,24 +1,30 @@
 # Core data structures for biomechanical trial data
-from .events import Event
-from .time_series import TimeSeriesGroup, MarkerTrajectory, Points, AnalogChannel, Analogs
-from .force_platforms import EZC3DForcePlatform
-from .trial import Trial
 from .enums import ImportMethod, OpenSimOutput
-from .sentinels import Sentinel, MISSING, MISSING_LIST, UNSET
+from .events import Event
+from .force_platforms import EZC3DForcePlatform
+from .sentinels import MISSING, MISSING_LIST, UNSET, Sentinel
+from .time_series import (
+    AnalogChannel,
+    Analogs,
+    MarkerTrajectory,
+    Points,
+    TimeSeriesGroup,
+)
+from .trial import Trial
 
 __all__ = [
-    'Event',
-    'TimeSeriesGroup', 
-    'MarkerTrajectory',
-    'Points',
-    'AnalogChannel', 
-    'Analogs',
-    'EZC3DForcePlatform',
-    'Trial',
-    'ImportMethod',
-    'OpenSimOutput',
-    'Sentinel',
-    'MISSING',
-    'MISSING_LIST', 
-    'UNSET'
+    "Event",
+    "TimeSeriesGroup",
+    "MarkerTrajectory",
+    "Points",
+    "AnalogChannel",
+    "Analogs",
+    "EZC3DForcePlatform",
+    "Trial",
+    "ImportMethod",
+    "OpenSimOutput",
+    "Sentinel",
+    "MISSING",
+    "MISSING_LIST",
+    "UNSET",
 ]

@@ -2,15 +2,18 @@
 
 from enum import Enum
 
+
 class ImportMethod(str, Enum):
     C3D = "C3D"
     VICON_NEXUS = "Vicon Nexus"
     CUSTOM = "Custom"
 
+
 class OpenSimOutput(str, Enum):
     """
     Enum for OpenSim output types.
     """
+
     SCALED_MODEL = "scaled_model"
     MARKER_MODEL = "marker_model"
     TRC = "trc"
