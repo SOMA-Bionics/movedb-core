@@ -42,7 +42,7 @@ test-parallel:  ## Run tests in parallel (requires pytest-xdist)
 	pytest -n auto
 
 ##@ Code Quality
-lint:  ## Run all linting checks (flake8, mypy, black, isort)
+lint:  ## Run all linting checks (flake8, mypy, black, isort, markdownlint)
 	@echo "Running flake8..."
 	flake8 src/ tests/
 	@echo "Running mypy..."
@@ -51,14 +51,18 @@ lint:  ## Run all linting checks (flake8, mypy, black, isort)
 	black --check --diff src/ tests/
 	@echo "Checking import sorting..."
 	isort --check-only --diff src/ tests/
+	@echo "Linting documentation..."
+	$(MAKE) lint-docs
 	@echo "✅ All linting checks passed!"
 
-lint-fix:  ## Auto-fix linting issues (format + sort imports)
+lint-fix:  ## Auto-fix linting issues (format + sort imports + fix docs)
 	@echo "Formatting code with black..."
 	black src/ tests/
 	@echo "Sorting imports with isort..."
 	isort src/ tests/
-	@echo "✅ Code formatted and imports sorted!"
+	@echo "Fixing documentation issues..."
+	$(MAKE) lint-docs-fix
+	@echo "✅ Code formatted, imports sorted, and docs fixed!"
 
 format:  ## Format code with black
 	black src/ tests/
@@ -77,6 +81,14 @@ flake8:  ## Run flake8 linting
 
 mypy:  ## Run mypy type checking
 	mypy src/movedb/ --ignore-missing-imports || true
+
+lint-docs:  ## Lint markdown documentation
+	@command -v markdownlint >/dev/null 2>&1 || { echo "markdownlint not found. Install with: npm install -g markdownlint-cli"; exit 1; }
+	markdownlint "**/*.md" --ignore node_modules --ignore .git
+
+lint-docs-fix:  ## Fix markdown documentation issues
+	@command -v markdownlint >/dev/null 2>&1 || { echo "markdownlint not found. Install with: npm install -g markdownlint-cli"; exit 1; }
+	markdownlint "**/*.md" --ignore node_modules --ignore .git --fix
 
 pre-commit:  ## Run pre-commit checks (like CI)
 	@echo "Running pre-commit checks..."

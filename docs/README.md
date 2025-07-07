@@ -13,7 +13,7 @@ This directory contains comprehensive documentation for movedb-core.
 - **[LINTING.md](LINTING.md)** - Code quality and linting guide
 - **[VERSION_MANAGEMENT.md](VERSION_MANAGEMENT.md)** - Version bumping and release process
 
-### 📦 Packaging & Distribution
+### 🚚 Packaging & Distribution
 - **[CONDA_PACKAGING.md](CONDA_PACKAGING.md)** - Complete conda packaging and distribution guide
 - **[CONDA_FORGE_SUBMISSION.md](CONDA_FORGE_SUBMISSION.md)** - How to submit to conda-forge
 
@@ -32,7 +32,7 @@ New to the project? Start here:
 
 1. **Installation**: [INSTALL.md](INSTALL.md)
 2. **Development Setup**: [DEVELOPMENT.md](DEVELOPMENT.md)
-3. **Contributing**: Check the main [README.md](../README.md)
+3. **Contributing**: Check the main [project README](../README.md)
 
 ## For Maintainers
 
@@ -45,11 +45,38 @@ Working on releases and distribution:
 
 ## Documentation Standards
 
-- Use clear, descriptive titles
-- Include code examples where helpful
-- Keep installation instructions up-to-date
-- Link between related documents
-- Use consistent formatting and structure
+All documentation follows automated standards enforced by CI:
+
+- **Style Consistency**: Enforced by markdownlint with project-specific rules
+- **Clear Structure**: Use descriptive titles and consistent formatting
+- **Code Examples**: Include helpful examples where appropriate  
+- **Link Validation**: Internal links checked automatically
+- **Line Length**: Maximum 120 characters (configurable)
+- **Cross-References**: Link between related documents using relative paths
+
+### Automated Enforcement
+
+Documentation quality is maintained through:
+- **CI Pipeline**: markdownlint runs on every PR and push
+- **Local Development**: `make lint-docs` checks documentation locally
+- **Auto-fixing**: `make lint-docs-fix` automatically fixes common issues
+- **Pre-commit Hooks**: Optional pre-commit setup for instant feedback
+
+### Local Setup
+
+```bash
+# Install markdownlint (one-time setup)
+npm install -g markdownlint-cli
+
+# Check documentation
+make lint-docs
+
+# Auto-fix documentation issues
+make lint-docs-fix
+
+# Run all linting (code + docs)
+make lint
+```
 
 ## Contributing to Documentation
 

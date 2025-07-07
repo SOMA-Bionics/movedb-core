@@ -33,6 +33,7 @@ The repository uses GitHub Actions for:
 - Import sorting check (isort)
 - Linting (flake8)
 - Type checking (mypy)
+- Documentation linting (markdownlint)
 
 #### **Security Job**
 - Bandit security scanning
@@ -178,21 +179,32 @@ Monitor your workflows:
 - Check for environment-specific issues
 - Verify all imports work correctly
 
+**Conda Environment Setup Failures**:
+- Check that `environment.yml` is valid
+- Ensure all channels are accessible
+- Check for conflicting dependencies
+
+**Tests Fail in CI but Pass Locally**:
+- Check Python version differences
+- Verify environment variables
+- Check for missing dependencies
+
+**Coverage Upload Failures**:
+- Codecov token may be required for private repos
+- Check that coverage.xml is generated
+
 ### Debugging
 
 Enable workflow debugging:
 1. Go to repository Settings → Secrets and variables → Actions
 2. Add secret: `ACTIONS_STEP_DEBUG` = `true`
 3. Re-run failed workflow for detailed logs
-- Automatic releases on version tags
 
-**Jobs:**
-- `test`: Test suite with coverage
-- `quality`: Code formatting, linting, and type checking
-- `security`: Security vulnerability scanning
-- `build`: Package building and artifact upload
-- `docs`: Documentation building (main branch only)
-- `release`: Automatic releases on version tags
+**Additional Debug Steps**:
+- Check the Actions tab in your GitHub repository for detailed logs
+- Look at the raw logs for each step
+- Use `conda list` step to verify environment setup
+- Add temporary debug steps to workflows for troubleshooting
 
 ## Setting Up in Your Repository
 
@@ -276,32 +288,6 @@ if: github.event_name == 'pull_request'
 if: startsWith(github.ref, 'refs/tags/v')
 ```
 
-## Troubleshooting
-
-### Common Issues
-
-1. **Conda environment setup fails**
-   - Check that `environment.yml` is valid
-   - Ensure all channels are accessible
-   - Check for conflicting dependencies
-
-2. **Tests fail in CI but pass locally**
-   - Check Python version differences
-   - Verify environment variables
-   - Check for missing dependencies
-
-3. **Coverage upload fails**
-   - Codecov token may be required for private repos
-   - Check that coverage.xml is generated
-
-### Debug Actions
-
-To debug workflow issues:
-1. Check the Actions tab in your GitHub repository
-2. Look at the raw logs for each step
-3. Use `conda list` step to verify environment setup
-4. Add debug steps to workflows temporarily
-
 ## Best Practices
 
 1. **Test locally first**: Always run tests locally before pushing
@@ -321,7 +307,7 @@ The GitHub Actions workflows integrate seamlessly with the development tools:
 ### **Local Commands Mirror CI**
 ```bash
 # Same commands work locally and in CI
-make test-quick      # Fast tests
+make test-quick     # Fast tests
 make test           # Full test suite with coverage
 make test-pattern PATTERN=imports  # Pattern-based testing
 make lint           # Code quality checks

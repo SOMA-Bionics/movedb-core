@@ -24,3 +24,6 @@ dependencies:
   - matplotlib
   - seaborn
   - pyyaml  # For local GitHub Actions workflow validation
+  - nodejs  # For markdownlint
+  - pip:
+    - isort  # Not available in conda-forge for latest version

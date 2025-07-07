@@ -215,6 +215,6 @@ Conda package recipe for building distribution packages.
 ## Next Steps
 
 After installation:
-1. Read the main [README.md](README.md) for usage examples
+1. Read the main [README.md](../README.md) for usage examples
 2. Check out [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md) for development guidelines
 3. See example notebooks in `notebooks/` directory

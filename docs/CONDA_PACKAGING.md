@@ -160,21 +160,46 @@ conda activate movedb-core-dev
 pip install -e .
 
 # Local development commands
-make build           # Build conda package
-make build-upload    # Build and upload to dev channel
-make clean-conda     # Clean build artifacts
+make build               # Build conda package locally
+make build-upload        # Build and upload to main channel
+make build-upload-dev    # Build and upload to dev channel
+make upload-conda        # Upload existing package to main channel
+make clean-conda         # Clean build artifacts
 ```
 
 ## 🔧 Available Commands
 
+The Makefile provides several commands for building and uploading conda packages:
+
+**Build Commands:**
 | Command | Purpose |
 |---------|---------|
 | `make build` | Build conda package locally |
-| `make upload-conda` | Upload to Anaconda.org |
-| `make build-upload` | Build and upload in one command |
-| `make clean-conda` | Clean build artifacts |
 | `./scripts/build_conda.sh` | Direct build script |
 | `./scripts/validate_package.sh` | Package validation |
+
+**Upload Commands:**
+| Command | Purpose |
+|---------|---------|
+| `make upload-conda` | Upload existing package to main channel |
+| `make upload-conda-dev` | Upload existing package to dev channel |
+
+**Combined Commands (Build + Upload):**
+| Command | Purpose |
+|---------|---------|
+| `make build-upload` | Build and upload to main channel (combines build + upload) |
+| `make build-upload-dev` | Build and upload to dev channel (combines build + upload) |
+
+**Utility Commands:**
+| Command | Purpose |
+|---------|---------|
+| `make clean-conda` | Clean build artifacts |
+
+### Usage Notes
+
+- **For most workflows**: Use `make build-upload` or `make build-upload-dev` to build and upload in one step
+- **For testing builds**: Use `make build` followed by `make validate` to test locally before uploading
+- **For re-uploading**: Use `make upload-conda` or `make upload-conda-dev` if you already have a built package
 
 ## Package Channels
 

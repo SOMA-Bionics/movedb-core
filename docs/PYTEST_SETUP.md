@@ -48,7 +48,7 @@ The test runner no longer requires specific environment names. It works with:
 ```bash
 # Option 1: Use provided environment.yml (recommended)
 conda env create -f environment.yml
-conda activate movedb-core-dev
+conda activate movedb-core-dev  # or your preferred environment name
 
 # Option 2: Create custom environment
 conda create -n my-custom-env python=3.11
@@ -56,7 +56,7 @@ conda activate my-custom-env
 conda install -c conda-forge -c opensim-org pytest pytest-cov black flake8 mypy
 
 # Option 3: Use existing environment
-conda activate existing-env
+conda activate existing-env  # any environment with the dependencies
 conda install pytest pytest-cov  # add missing dependencies
 ```
 
@@ -93,7 +93,7 @@ New developers can get started with just:
 git clone https://github.com/SOMA-Bionics/movedb-core.git
 cd movedb-core
 conda env create -f environment.yml
-conda activate movedb-core-dev
+conda activate movedb-core-dev  # environment name from environment.yml
 pip install -e .
 make test-quick
 ```
@@ -110,6 +110,7 @@ make test-quick
 
 #### **How It Works Now**
 ```python
+import os
 def check_environment():
     """Check if we're in a conda environment with required dependencies."""
     conda_env = os.environ.get('CONDA_DEFAULT_ENV')
@@ -127,7 +128,7 @@ def check_environment():
         return False
 ```
 
-## � IDE Integration
+## 💻 IDE Integration
 
 - VSCode settings documented in `docs/DEVELOPMENT.md`
 - pytest configuration in `pyproject.toml` works with most IDEs

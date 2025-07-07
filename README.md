@@ -36,8 +36,7 @@ conda install -c hudsonburke movedb-core
 ### From PyPI (Limited Support)
 
 ```bash
-# WARNING: This will NOT work out of the box!
-# ezc3d and opensim are only available via conda
+# WARNING: opensim is only available via conda
 # You'll need to manually compile these dependencies
 pip install movedb-core
 ```

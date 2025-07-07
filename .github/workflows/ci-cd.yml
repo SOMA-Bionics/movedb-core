@@ -125,6 +125,14 @@ jobs:
         conda activate quality-env
         mypy src/movedb/ --ignore-missing-imports || true
 
+    - name: Install markdownlint
+      run: |
+        npm install -g markdownlint-cli
+
+    - name: Lint markdown files
+      run: |
+        markdownlint "**/*.md" --ignore node_modules --ignore .git
+
   security:
     name: Security Scan
     runs-on: ubuntu-latest
