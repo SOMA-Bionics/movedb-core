@@ -64,9 +64,9 @@ class MarkerTrajectory(BaseModel):
     def validate_dataframe_structure(cls, v: pl.DataFrame) -> pl.DataFrame:
         """Validate that the DataFrame has the required columns"""
         required_columns = ['x', 'y', 'z', 'residual']
-        
-        if not all(col in v.columns for col in required_columns):
-            missing = [col for col in required_columns if col not in v.columns]
+
+        missing = [col for col in required_columns if col not in v.columns]
+        if missing:
             raise ValueError(f"Missing required columns: {missing}")
         
         # Ensure correct data types
