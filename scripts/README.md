@@ -22,6 +22,18 @@ Interactive script to set up GitHub repository secrets for automatic conda packa
 ./scripts/setup_anaconda_integration.sh
 ```
 
+### `prepare_conda_forge.py`
+Helps prepare the package for conda-forge submission by checking requirements and generating conda-forge recipe.
+```bash
+python scripts/prepare_conda_forge.py
+```
+
+### `check_v1_readiness.py`
+Checks package readiness for v1.0.0 release by evaluating coverage, quality, documentation, and other metrics.
+```bash
+python scripts/check_v1_readiness.py
+```
+
 ## Testing Scripts
 
 ### `run_tests.py`

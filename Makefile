@@ -117,6 +117,12 @@ build-upload-dev:  ## Build and upload conda package to dev channel
 setup-anaconda:  ## Set up Anaconda.org integration (GitHub secrets)
 	./scripts/setup_anaconda_integration.sh
 
+prepare-conda-forge:  ## Prepare package for conda-forge submission
+	python scripts/prepare_conda_forge.py
+
+check-v1-readiness:  ## Check readiness for v1.0.0 release
+	python scripts/check_v1_readiness.py
+
 ##@ Version Management
 bump-patch:  ## Bump patch version (x.y.z -> x.y.z+1)
 	python scripts/bump_version.py patch

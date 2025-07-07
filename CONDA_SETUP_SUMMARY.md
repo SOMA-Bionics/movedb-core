@@ -53,7 +53,7 @@ To enable automatic uploads, you need to configure GitHub secrets:
 git tag v1.0.0
 git push origin v1.0.0
 ```
-→ Automatically uploads to main channel
+→ Automatically uploads to main channel (ready for conda-forge submission!)
 
 ### Main Branch Development
 ```bash

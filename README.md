@@ -1,5 +1,7 @@
 # MoveDB Core
 
+<img src="imgs/MoveDB-Logo-nobg-cropped.png" width="40%">
+
 [![Tests](https://github.com/SOMA-Bionics/movedb-core/actions/workflows/tests.yml/badge.svg)](https://github.com/SOMA-Bionics/movedb-core/actions/workflows/tests.yml)
 [![CI/CD](https://github.com/SOMA-Bionics/movedb-core/actions/workflows/ci-cd.yml/badge.svg)](https://github.com/SOMA-Bionics/movedb-core/actions/workflows/ci-cd.yml)
 [![Python Version](https://img.shields.io/badge/python-3.8+-blue.svg)](https://python.org)
@@ -21,7 +23,11 @@ Core library for movement database operations, including C3D file I/O and OpenSi
 ### From Conda (Recommended)
 
 ```bash
-conda install -c conda-forge movedb-core
+# Currently available from personal channel
+conda install -c hudsonburke movedb-core
+
+# Coming soon: conda-forge (planned for v1.0.0)
+# conda install -c conda-forge movedb-core
 ```
 
 **Note**: We strongly recommend using conda, as key dependencies (`ezc3d`, `opensim`) are not available on PyPI.
@@ -201,6 +207,19 @@ conda-verify dist/conda/**/*.conda
 The CI/CD workflow automatically builds and uploads conda packages to Anaconda.org:
 - **Tagged releases** (e.g., `v1.0.0`) → Main channel
 - **Main branch pushes** → Development channel (`--label dev`)
+
+For conda-forge submission (to make the package available as `conda install -c conda-forge movedb-core`), see [docs/CONDA_FORGE_SUBMISSION.md](docs/CONDA_FORGE_SUBMISSION.md).
+
+### Version 1.0.0 Roadmap
+
+We're working toward a stable v1.0.0 release for conda-forge submission. Track our progress:
+
+```bash
+# Check readiness for v1.0.0
+make check-v1-readiness
+```
+
+See [docs/ROADMAP_V1.md](docs/ROADMAP_V1.md) for the complete roadmap and timeline.
 
 For more details, see [docs/CONDA_PACKAGING.md](docs/CONDA_PACKAGING.md).
 
