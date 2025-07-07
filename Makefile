@@ -21,7 +21,7 @@ update-env:  ## Update conda environment
 
 ##@ Testing
 test:  ## Run all tests with coverage
-	python run_tests.py
+	python scripts/run_tests.py
 
 test-quick:  ## Run tests without coverage (faster)
 	pytest --no-cov
@@ -33,10 +33,10 @@ test-coverage:  ## Run tests with coverage and HTML report
 	pytest --cov=src/movedb --cov-report=html --cov-report=term-missing
 
 test-specific:  ## Run specific test file (usage: make test-specific FILE=test_basic.py)
-	pytest tests/$(FILE) -v
+	python scripts/run_tests.py --file $(FILE)
 
 test-pattern:  ## Run tests matching pattern (usage: make test-pattern PATTERN=trial)
-	pytest -k "$(PATTERN)" -v
+	python scripts/run_tests.py --pattern $(PATTERN)
 
 test-parallel:  ## Run tests in parallel (requires pytest-xdist)
 	pytest -n auto
@@ -86,35 +86,58 @@ pre-commit:  ## Run pre-commit checks (like CI)
 
 ##@ Build and Package
 build:  ## Build conda package
-	bash build_conda.sh
+	./scripts/build_conda.sh
 
 build-wheel:  ## Build Python wheel
 	python -m build
 
+build-all:  ## Build both conda and wheel packages
+	$(MAKE) build
+	$(MAKE) build-wheel
+
 validate:  ## Validate package installation
-	bash validate_package.sh
+	./scripts/validate_package.sh
+
+upload-conda:  ## Upload conda package to Anaconda.org (requires authentication)
+	@echo "Uploading conda package to Anaconda.org..."
+	anaconda upload dist/conda/**/*.conda
+
+upload-conda-dev:  ## Upload conda package to dev channel
+	@echo "Uploading conda package to dev channel..."
+	anaconda upload --label dev dist/conda/**/*.conda
+
+build-upload:  ## Build and upload conda package
+	$(MAKE) build
+	$(MAKE) upload-conda
+
+build-upload-dev:  ## Build and upload conda package to dev channel
+	$(MAKE) build
+	$(MAKE) upload-conda-dev
+
+setup-anaconda:  ## Set up Anaconda.org integration (GitHub secrets)
+	./scripts/setup_anaconda_integration.sh
 
 ##@ Version Management
 bump-patch:  ## Bump patch version (x.y.z -> x.y.z+1)
-	python bump_version.py patch
+	python scripts/bump_version.py patch
 
 bump-minor:  ## Bump minor version (x.y.z -> x.y+1.0)
-	python bump_version.py minor
+	python scripts/bump_version.py minor
 
 bump-major:  ## Bump major version (x.y.z -> x+1.0.0)
-	python bump_version.py major
+	python scripts/bump_version.py major
 
 bump-version:  ## Bump to specific version (usage: make bump-version VERSION=1.2.3)
-	python bump_version.py $(VERSION)
+	python scripts/bump_version.py $(VERSION)
 
 release-patch:  ## Bump patch version, tag, and push
-	python bump_version.py patch --tag --push
+	python scripts/bump_version.py patch --tag --push
 
 release-minor:  ## Bump minor version, tag, and push
-	python bump_version.py minor --tag --push
+	python scripts/bump_version.py minor --tag --push
 
 release-major:  ## Bump major version, tag, and push
-	python bump_version.py major --tag --push
+	python scripts/bump_version.py major --tag --push
 
 ##@ Documentation
 docs:  ## Generate documentation

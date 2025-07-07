@@ -144,6 +144,15 @@ Tests and linting are automatically run on:
 - Push to main branch
 - Release creation
 
+### Conda Package Distribution
+
+The CI/CD workflow automatically builds and uploads conda packages:
+
+- **Tagged releases** (e.g., `v1.0.0`): Uploaded to main channel
+- **Main branch pushes**: Uploaded to development channel (`--label dev`)
+
+See [CONDA_PACKAGING.md](CONDA_PACKAGING.md) for detailed information.
+
 ## Makefile Commands
 
 For convenience, common development tasks are available via `make`:
@@ -197,6 +206,10 @@ conda env remove -n movedb-core-dev  # or your environment name
 conda env create -f environment.yml
 conda activate movedb-core-dev        # or your environment name
 pip install -e .
+
+make clean-conda   # Clean conda build artifacts
+make upload-conda  # Upload conda package to Anaconda.org
+make build-upload  # Build and upload conda package
 
 # OR install dependencies in existing environment
 conda install -c conda-forge -c opensim-org pytest pytest-cov

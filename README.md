@@ -114,7 +114,7 @@ make test-specific FILE=test_basic.py
 make test-pattern PATTERN=trial
 
 # Alternative: use Python runner
-python run_tests.py
+python scripts/run_tests.py
 ```
 
 ### Code Quality
@@ -138,6 +138,8 @@ make pre-commit
 - `make build` - Build conda package
 - `make clean` - Clean build artifacts
 - `make help` - Show all available commands
+
+For detailed information about individual scripts, see [`scripts/README.md`](scripts/README.md).
 
 See `docs/DEVELOPMENT.md` for detailed development guidelines and `docs/LINTING.md` for code quality information.
 
@@ -182,9 +184,38 @@ pip install -e ".[dev]"
 
 **Important**: Pure pip development is not supported due to conda-only dependencies.
 
+### Building and Packaging
+
+Build conda package locally:
+```bash
+# Install build dependencies
+conda install -c conda-forge conda-build conda-verify
+
+# Build package
+./scripts/build_conda.sh
+
+# Verify package
+conda-verify dist/conda/**/*.conda
+```
+
+The CI/CD workflow automatically builds and uploads conda packages to Anaconda.org:
+- **Tagged releases** (e.g., `v1.0.0`) → Main channel
+- **Main branch pushes** → Development channel (`--label dev`)
+
+For more details, see [docs/CONDA_PACKAGING.md](docs/CONDA_PACKAGING.md).
+
+### Testing and Quality
+
 Run tests:
 ```bash
 pytest
+```
+
+Run linting and formatting:
+```bash
+make lint        # Check code quality
+make lint-fix    # Fix formatting issues
+make pre-commit  # Run pre-commit checks
 ```
 
 ## License

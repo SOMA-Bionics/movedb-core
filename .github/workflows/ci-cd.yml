@@ -174,7 +174,7 @@ jobs:
       shell: bash -l {0}
       run: |
         conda activate build-env
-        conda build conda-recipe/ --output-folder dist/conda
+        ./scripts/build_conda.sh
     
     - name: Build Python wheel
       shell: bash -l {0}
@@ -249,6 +249,21 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
     
+    - name: Set up Miniconda
+      uses: conda-incubator/setup-miniconda@v3
+      with:
+        auto-update-conda: true
+        python-version: ${{ env.PYTHON_VERSION }}
+        channels: conda-forge,opensim-org,defaults
+        channel-priority: strict
+        activate-environment: release-env
+    
+    - name: Install anaconda-client
+      shell: bash -l {0}
+      run: |
+        conda activate release-env
+        conda install -c conda-forge anaconda-client
+    
     - name: Download conda package
       uses: actions/download-artifact@v4
       with:
@@ -261,6 +276,22 @@ jobs:
         name: wheel-package
         path: dist/wheel/
     
+    - name: Upload to Anaconda.org
+      shell: bash -l {0}
+      run: |
+        conda activate release-env
+        # Upload conda package to anaconda.org
+        echo "Uploading conda packages to Anaconda.org..."
+        for pkg in dist/conda/**/*.conda; do
+          if [ -f "$pkg" ]; then
+            echo "Uploading $pkg..."
+            anaconda --token ${{ secrets.ANACONDA_API_TOKEN }} upload --user ${{ secrets.ANACONDA_USER }} "$pkg" --force
+          fi
+        done
+        echo "Upload completed!"
+      env:
+        ANACONDA_API_TOKEN: ${{ secrets.ANACONDA_API_TOKEN }}
+    
     - name: Create GitHub Release
       uses: softprops/action-gh-release@v2
       with:
@@ -272,3 +303,51 @@ jobs:
         generate_release_notes: true
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  upload:
+    name: Upload Package
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs: [test, quality, build]
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Set up Miniconda
+      uses: conda-incubator/setup-miniconda@v3
+      with:
+        auto-update-conda: true
+        python-version: ${{ env.PYTHON_VERSION }}
+        channels: conda-forge,opensim-org,defaults
+        channel-priority: strict
+        activate-environment: upload-env
+    
+    - name: Install anaconda-client
+      shell: bash -l {0}
+      run: |
+        conda activate upload-env
+        conda install -c conda-forge anaconda-client
+    
+    - name: Download conda package
+      uses: actions/download-artifact@v4
+      with:
+        name: conda-package
+        path: dist/conda/
+    
+    - name: Upload to Anaconda.org (main branch)
+      shell: bash -l {0}
+      run: |
+        conda activate upload-env
+        # Upload conda package to anaconda.org
+        # For main branch, upload as development version
+        echo "Uploading conda packages to Anaconda.org (dev channel)..."
+        for pkg in dist/conda/**/*.conda; do
+          if [ -f "$pkg" ]; then
+            echo "Uploading $pkg to dev channel..."
+            anaconda --token ${{ secrets.ANACONDA_API_TOKEN }} upload --user ${{ secrets.ANACONDA_USER }} --label dev "$pkg" --force
+          fi
+        done
+        echo "Upload completed!"
+      env:
+        ANACONDA_API_TOKEN: ${{ secrets.ANACONDA_API_TOKEN }}
