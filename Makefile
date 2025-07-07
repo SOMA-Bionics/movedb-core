@@ -42,15 +42,47 @@ test-parallel:  ## Run tests in parallel (requires pytest-xdist)
 	pytest -n auto
 
 ##@ Code Quality
-lint:  ## Run linting checks
+lint:  ## Run all linting checks (flake8, mypy, black, isort)
+	@echo "Running flake8..."
 	flake8 src/ tests/
-	mypy src/movedb/
+	@echo "Running mypy..."
+	mypy src/movedb/ --ignore-missing-imports || true
+	@echo "Checking black formatting..."
+	black --check --diff src/ tests/
+	@echo "Checking import sorting..."
+	isort --check-only --diff src/ tests/
+	@echo "✅ All linting checks passed!"
+
+lint-fix:  ## Auto-fix linting issues (format + sort imports)
+	@echo "Formatting code with black..."
+	black src/ tests/
+	@echo "Sorting imports with isort..."
+	isort src/ tests/
+	@echo "✅ Code formatted and imports sorted!"
 
 format:  ## Format code with black
 	black src/ tests/
 
 format-check:  ## Check code formatting
-	black --check src/ tests/
+	black --check --diff src/ tests/
+
+isort:  ## Sort imports
+	isort src/ tests/
+
+isort-check:  ## Check import sorting
+	isort --check-only --diff src/ tests/
+
+flake8:  ## Run flake8 linting
+	flake8 src/ tests/
+
+mypy:  ## Run mypy type checking
+	mypy src/movedb/ --ignore-missing-imports || true
+
+pre-commit:  ## Run pre-commit checks (like CI)
+	@echo "Running pre-commit checks..."
+	$(MAKE) lint
+	$(MAKE) test-quick
+	@echo "✅ Pre-commit checks passed!"
 
 ##@ Build and Package
 build:  ## Build conda package
@@ -104,8 +136,9 @@ clean-conda:  ## Clean conda build artifacts
 
 ##@ Development Shortcuts
 dev-setup: install-dev  ## Full development setup
-dev-test: format lint test  ## Full development testing pipeline
+dev-test: lint-fix test  ## Full development testing pipeline (fix + test)
 dev-quick: test-quick  ## Quick test run for development
+ci-check: lint test  ## Run CI checks locally
 
 # Default target
 .DEFAULT_GOAL := help

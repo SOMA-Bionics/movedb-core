@@ -117,16 +117,29 @@ make test-pattern PATTERN=trial
 python run_tests.py
 ```
 
+### Code Quality
+```bash
+# Run all linting checks (like CI)
+make lint
+
+# Auto-fix formatting and import issues
+make lint-fix
+
+# Pre-commit checks (lint + test)
+make pre-commit
+```
+
 ### Available Make Commands
 - `make test` - Run all tests with coverage
 - `make test-quick` - Run tests without coverage (faster)
-- `make lint` - Run code linting
+- `make lint` - Run all linting checks (black, isort, flake8, mypy)
+- `make lint-fix` - Auto-fix formatting and import sorting
 - `make format` - Format code with black
 - `make build` - Build conda package
 - `make clean` - Clean build artifacts
 - `make help` - Show all available commands
 
-See `docs/DEVELOPMENT.md` for detailed development guidelines.
+See `docs/DEVELOPMENT.md` for detailed development guidelines and `docs/LINTING.md` for code quality information.
 
 ## Core Classes
 
