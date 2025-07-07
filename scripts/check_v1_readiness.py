@@ -74,6 +74,7 @@ def check_documentation():
         "docs/CONDA_PACKAGING.md",
         "docs/CONDA_FORGE_SUBMISSION.md",
         "docs/ROADMAP_V1.md",
+        "docs/INSTALL.md",
         "LICENSE",
     ]
     

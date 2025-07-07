@@ -30,7 +30,7 @@ conda install -c hudsonburke movedb-core
 # conda install -c conda-forge movedb-core
 ```
 
-**Note**: We strongly recommend using conda, as key dependencies (`ezc3d`, `opensim`) are not available on PyPI.
+**Note**: We strongly recommend using conda, as `opensim` is not available on PyPI.
 
 
 ### From PyPI (Limited Support)
@@ -53,6 +53,17 @@ conda env create -f environment.yml
 conda activate movedb-core-dev
 pip install -e .
 ```
+
+For detailed installation instructions, see [docs/INSTALL.md](docs/INSTALL.md).
+
+## Documentation
+
+📚 **Complete documentation is available in [docs/README.md](docs/README.md)**, including:
+- Installation guide and development setup
+- API design and architecture
+- Testing and code quality guidelines  
+- CI/CD and packaging workflows
+- Version 1.0.0 roadmap
 
 ## Quick Start
 
@@ -147,7 +158,7 @@ make pre-commit
 
 For detailed information about individual scripts, see [`scripts/README.md`](scripts/README.md).
 
-See `docs/DEVELOPMENT.md` for detailed development guidelines and `docs/LINTING.md` for code quality information.
+See [`docs/README.md`](docs/README.md) for a complete documentation index, including detailed development guidelines and setup information.
 
 ## Core Classes
 
@@ -164,10 +175,8 @@ See `docs/DEVELOPMENT.md` for detailed development guidelines and `docs/LINTING.
 - polars >= 0.20.0
 - pydantic >= 2.0.0
 - loguru >= 0.6.0
-- ezc3d >= 1.5.0 *(conda-forge only)*
+- ezc3d >= 1.5.0
 - opensim >= 4.0.0 *(opensim-org only)*
-
-**Note**: This package requires conda for installation due to dependencies that are not available on PyPI.
 
 ## Development
 
@@ -187,8 +196,6 @@ conda activate movedb-dev
 conda install -c conda-forge numpy polars pydantic loguru ezc3d
 pip install -e ".[dev]"
 ```
-
-**Important**: Pure pip development is not supported due to conda-only dependencies.
 
 ### Building and Packaging
 

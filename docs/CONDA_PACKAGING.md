@@ -2,9 +2,17 @@
 
 This document describes the conda packaging and automated distribution setup for movedb-core.
 
-## Overview
+## ✅ Overview
 
 The project uses conda for packaging and distribution, with automatic uploads to Anaconda.org through GitHub Actions CI/CD. This ensures reliable distribution of the package with all its dependencies, including `ezc3d` and `opensim` which are not available on PyPI.
+
+### 🏗️ What's Configured
+
+1. **Conda Recipe Files**: `conda-recipe/meta.yaml` and build configuration
+2. **CI/CD Workflow**: Automatic uploads to main and dev channels
+3. **Build Scripts**: Local building and validation tools
+4. **Makefile Commands**: Easy development commands
+5. **Complete Documentation**: Setup and usage guides
 
 ## Package Structure
 
@@ -48,6 +56,45 @@ Configure these secrets in your GitHub repository settings:
 2. **ANACONDA_API_TOKEN**: API token with upload permissions
 
 #### Creating an API Token
+1. Go to [anaconda.org](https://anaconda.org)
+2. Log in and go to Settings → Access → API tokens
+3. Create a new token with upload permissions
+4. Add the token as `ANACONDA_API_TOKEN` secret in GitHub
+
+### Setup Helper
+
+Use the automated setup script:
+```bash
+./scripts/setup_anaconda_integration.sh
+```
+
+## 🚀 How It Works
+
+### Automatic Distribution
+
+#### Tagged Releases → Main Channel
+```bash
+git tag v1.0.0
+git push origin v1.0.0
+```
+→ Automatically uploads to main channel (ready for conda-forge submission!)
+
+#### Main Branch → Dev Channel
+```bash
+git push origin main
+```
+→ Automatically uploads to dev channel for testing
+
+### Usage
+
+#### For End Users
+```bash
+# Stable releases (recommended)
+conda install -c YOUR_USERNAME movedb-core
+
+# Development versions (testing)
+conda install -c YOUR_USERNAME -c dev movedb-core
+```
 
 1. Go to [Anaconda.org](https://anaconda.org)
 2. Sign in to your account
@@ -111,7 +158,23 @@ conda activate movedb-core-dev
 
 # Install in development mode
 pip install -e .
+
+# Local development commands
+make build           # Build conda package
+make build-upload    # Build and upload to dev channel
+make clean-conda     # Clean build artifacts
 ```
+
+## 🔧 Available Commands
+
+| Command | Purpose |
+|---------|---------|
+| `make build` | Build conda package locally |
+| `make upload-conda` | Upload to Anaconda.org |
+| `make build-upload` | Build and upload in one command |
+| `make clean-conda` | Clean build artifacts |
+| `./scripts/build_conda.sh` | Direct build script |
+| `./scripts/validate_package.sh` | Package validation |
 
 ## Package Channels
 
@@ -168,11 +231,20 @@ conda search --info movedb-core
 conda inspect linkages movedb-core
 ```
 
-## Monitoring
+## 🔍 Monitoring
 
-- Monitor build status in GitHub Actions
-- Check package availability on Anaconda.org
-- Monitor download statistics and feedback
+- **GitHub Actions**: Monitor builds in the Actions tab
+- **Anaconda.org**: Track uploads at `https://anaconda.org/YOUR_USERNAME/movedb-core`
+- **CI Status**: Status badges in README.md
+- **Download Statistics**: Available on Anaconda.org package page
+
+## 🎯 Benefits
+
+- **Automated distribution**: No manual uploads needed
+- **Quality assurance**: Only uploads after all tests pass
+- **Version management**: Separate stable and development channels
+- **Dependency management**: Conda handles complex dependencies (ezc3d, opensim)
+- **Multi-platform**: Builds for different Python versions and platforms
 
 ## Security
 

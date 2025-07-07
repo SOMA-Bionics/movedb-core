@@ -1,33 +1,189 @@
-# GitHub Actions CI/CD Setup
+# GitHub Actions CI/CD
+
+This document describes the complete GitHub Actions setup for automated testing, building, and deployment of movedb-core.
 
 ## Overview
 
-The `movedb-core` repository now includes comprehensive GitHub Actions workflows for continuous integration and deployment. Tests will run automatically on every push and pull request.
+The repository uses GitHub Actions for:
+- **Continuous Integration**: Automated testing on every push/PR
+- **Code Quality**: Linting, formatting, and security checks  
+- **Automated Building**: Conda and wheel package building
+- **Automated Deployment**: Package uploads to Anaconda.org
+- **Fast Feedback**: Quick test runs for rapid development
 
-## Workflows
+## 🏗️ Workflow Files
 
-### 1. Tests Workflow (`.github/workflows/tests.yml`)
-**Triggers:** Push to main/develop, Pull requests
+### 1. Main CI/CD Pipeline (`.github/workflows/ci-cd.yml`)
 
-**What it does:**
-- Runs tests on Python 3.8-3.12
-- Generates coverage reports
-- Uploads coverage to Codecov
-- Includes a quick test job without coverage for faster feedback
+**Triggers**: 
+- Push to `main`/`develop` branches
+- Pull requests 
+- Version tags (`v*`)
 
-**Jobs:**
-- `test`: Full test suite with coverage across Python versions
-- `quick-test`: Fast test run on Python 3.11 without coverage
+**Jobs**:
 
-### 2. CI/CD Workflow (`.github/workflows/ci-cd.yml`)
-**Triggers:** Push to main/develop, Pull requests, Tags
+#### **Test Job**
+- Runs on Python 3.8-3.12 matrix
+- Uses conda environment from `environment.yml`
+- Generates coverage reports (uploads to Codecov)
+- Tests explicit submodule imports
 
-**What it does:**
-- Comprehensive testing across Python versions
-- Code quality checks (black, flake8, mypy, isort)
-- Security scanning with bandit
-- Package building (conda + wheel)
-- Documentation building
+#### **Quality Job** 
+- Code formatting check (black)
+- Import sorting check (isort)
+- Linting (flake8)
+- Type checking (mypy)
+
+#### **Security Job**
+- Bandit security scanning
+- Uploads security reports as artifacts
+
+#### **Build Job**
+- Builds conda packages using `scripts/build_conda.sh`
+- Builds Python wheels
+- Uploads packages as artifacts
+- Only runs after tests and quality checks pass
+
+#### **Documentation Job** (main branch only)
+- Builds documentation if Sphinx config exists
+- Uploads docs as artifacts
+
+#### **Release Job** (tagged releases only)
+- Downloads built packages
+- Uploads conda packages to Anaconda.org main channel
+- Creates GitHub releases with package attachments
+- Requires `ANACONDA_USER` and `ANACONDA_API_TOKEN` secrets
+
+#### **Upload Job** (main branch only)
+- Uploads conda packages to Anaconda.org dev channel
+- For development/pre-release testing
+
+### 2. Simplified Tests (`.github/workflows/tests.yml`)
+
+**Purpose**: Faster feedback for development
+**Triggers**: Push/PR to main/develop
+
+**Jobs**:
+- **test**: Full test suite with coverage (Python 3.8-3.12)
+- **quick-test**: Fast test run without coverage (Python 3.11 only)
+
+## ✅ What's Working
+
+### **Automatic Triggers**
+```yaml
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+  release:
+    types: [ published ]
+```
+
+### **Test Matrix**
+```yaml
+strategy:
+  matrix:
+    python-version: ['3.8', '3.9', '3.10', '3.11', '3.12']
+```
+
+### **Conda Environment Setup**
+```yaml
+- name: Set up Miniconda
+  uses: conda-incubator/setup-miniconda@v3
+  with:
+    channels: conda-forge,opensim-org,defaults
+    activate-environment: test-env
+```
+
+## 🔧 Required Secrets
+
+Configure these in your GitHub repository settings:
+
+| Secret | Purpose | Required For |
+|--------|---------|--------------|
+| `ANACONDA_USER` | Your Anaconda.org username | Package uploads |
+| `ANACONDA_API_TOKEN` | Anaconda.org API token | Package uploads |
+| `CODECOV_TOKEN` | Codecov integration token | Coverage reports (optional) |
+
+### Setting Up Anaconda.org Integration
+
+Use the setup script:
+```bash
+./scripts/setup_anaconda_integration.sh
+```
+
+Or manually:
+1. Create API token at [anaconda.org](https://anaconda.org) → Account Settings → Access → API tokens
+2. Add secrets in GitHub: Settings → Secrets and variables → Actions
+
+## 🚀 Workflow Features
+
+### **Smart Caching**
+- Conda environments cached for faster builds
+- pip cache for Python packages
+
+### **Matrix Testing**
+- Tests across Python 3.8-3.12
+- Conda environments for reproducible testing
+
+### **Artifact Management**
+- 30-day retention for build artifacts
+- Coverage reports and security scans
+- Built packages available for download
+
+### **Release Automation**
+- Automatic package upload on version tags
+- GitHub releases with changelog generation
+- Both main and dev channel support
+
+## Local Testing
+
+Test your workflows locally:
+
+```bash
+# Run the same checks locally
+make ci-check
+
+# Build packages locally  
+make build
+
+# Test upload process
+make build-upload-dev
+```
+
+## Monitoring
+
+Monitor your workflows:
+- **GitHub Actions tab**: Build status and logs
+- **Codecov**: Coverage trends and reports
+- **Anaconda.org**: Package downloads and versions
+
+## Troubleshooting
+
+### Common Issues
+
+**Build Failures**:
+- Check conda environment compatibility
+- Verify all dependencies in `environment.yml`
+- Test conda recipe locally: `make build`
+
+**Upload Failures**:
+- Verify Anaconda.org secrets are set correctly
+- Check API token permissions
+- Ensure package name matches Anaconda.org expectations
+
+**Test Failures**:
+- Run tests locally: `make test`
+- Check for environment-specific issues
+- Verify all imports work correctly
+
+### Debugging
+
+Enable workflow debugging:
+1. Go to repository Settings → Secrets and variables → Actions
+2. Add secret: `ACTIONS_STEP_DEBUG` = `true`
+3. Re-run failed workflow for detailed logs
 - Automatic releases on version tags
 
 **Jobs:**
@@ -162,4 +318,58 @@ The GitHub Actions workflows integrate seamlessly with the development tools:
 - Follows the same code quality standards
 - Supports the same Python versions
 
-This ensures consistency between local development and CI/CD environments.
+### **Local Commands Mirror CI**
+```bash
+# Same commands work locally and in CI
+make test-quick      # Fast tests
+make test           # Full test suite with coverage
+make test-pattern PATTERN=imports  # Pattern-based testing
+make lint           # Code quality checks
+make format         # Code formatting
+```
+
+### **Status Monitoring**
+Your README includes status badges:
+- ![Tests](https://github.com/SOMA-Bionics/movedb-core/actions/workflows/tests.yml/badge.svg)
+- ![CI/CD](https://github.com/SOMA-Bionics/movedb-core/actions/workflows/ci-cd.yml/badge.svg)
+
+## Key Benefits
+
+### ✅ **Automatic Quality Assurance**
+- Every push and PR is automatically tested
+- Code quality is checked before merging
+- Security vulnerabilities are detected early
+
+### ✅ **Multi-Environment Testing**
+- Tests run on Python 3.8-3.12
+- Conda environment ensures consistency
+- Same tools used locally and in CI
+
+### ✅ **Fast Feedback**
+- Quick test job provides rapid feedback
+- Full test suite provides comprehensive coverage
+- Failed tests prevent problematic merges
+
+### ✅ **Professional Development**
+- Status badges show project health
+- Automated releases from version tags
+- Documentation builds automatically
+
+## API Integration Support
+
+The workflows fully support the explicit submodule import strategy:
+
+```python
+# These imports are tested in CI
+from movedb.core import Trial, Event, Points, Analogs
+from movedb.file_io import C3DLoader, OpenSimExporter
+```
+
+The CI setup is designed to grow with your project and support future API expansions like `from movedb.api import TrialDB`.
+
+## Summary
+
+Your development workflow is now fully automated:
+- **Write code** → **Push to GitHub** → **Tests run automatically** → **Get feedback** → **Merge with confidence**
+
+This ensures consistency between local development and CI/CD environments, providing the foundation for reliable, high-quality software development with minimal manual intervention.
