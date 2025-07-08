@@ -8,7 +8,7 @@ A Python library for handling movement/biomechanics data including:
 - Motion capture data management
 """
 
-__version__ = "0.2.1"
+__version__ = "0.2.2"
 __author__ = "Hudson Burke"
 __email__ = "hudsonburke01@gmail.com"
 
@@ -29,7 +29,7 @@ from .core import (
     TimeSeriesGroup,
     Trial,
 )
-from .file_io import C3DLoader, OpenSimExporter, parse_enf_file, sto_to_df
+from .file_io import C3DLoader, parse_enf_file, sto_to_df
 from .utils import snake_to_pascal
 
 __all__ = [
@@ -52,7 +52,6 @@ __all__ = [
     "UNSET",
     # File I/O
     "C3DLoader",
-    "OpenSimExporter",
     "sto_to_df",
     "parse_enf_file",
     # Utilities
