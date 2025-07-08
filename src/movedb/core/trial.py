@@ -225,6 +225,54 @@ class Trial(BaseModel):
         """
         raise NotImplementedError("Vicon Nexus API integration is not implemented yet.")
 
+    def to_mat(self, filepath: str):
+        """
+        Export marker data to a .mat file.
+        Args:
+            filepath (str): Path to save the .mat file.
+        """
+        import scipy.io as sio
+        mat_dict = {}
+        info = {
+            "TrialName": self.name,
+            "Session": self.session_name,
+            "Subjects": self.subject_names,
+            "Classification": self.classification,
+            "CameraRate": self.points.rate,
+            "SubjectParameters": self.parameters,
+        }
+        mat_dict["Info"] = info
+        
+        events = {
+            "TotalFrames": self.points.last_frame + 1 - self.points.first_frame,
+            "RegionOfInterest": [
+                self.points.first_frame,
+                self.points.last_frame,
+            ],
+            "LeftFootStrike": [
+                event.get_frame(self.points.rate) for event in self.get_events(label="Foot Strike", context="Left")
+            ],
+            "RightFootStrike": [
+                event.get_frame(self.points.rate) for event in self.get_events(label="Foot Strike", context="Right")
+            ],
+            "LeftFootOff": [
+                event.get_frame(self.points.rate) for event in self.get_events(label="Foot Off", context="Left")
+            ],
+            "RightFootOff": [
+                event.get_frame(self.points.rate) for event in self.get_events(label="Foot Off", context="Right")
+            ],
+            "General": [
+                event.get_frame(self.points.rate) for event in self.get_events(context="General")
+            ]
+        }
+        mat_dict["Events"] = events
+        
+        mat_dict["Markers"] = self.points.to_dict(include_residual=False)
+        
+        mat_dict["Analog"] = self.analogs.to_df().to_dict()
+        
+        sio.savemat(filepath, mat_dict)
+
     def to_trc(
         self, filepath: str, output_units: str = "mm", rotation: np.ndarray = np.eye(3)
     ):
