@@ -11,28 +11,27 @@ import polars as pl
 from loguru import logger
 from pydantic import BaseModel, model_validator
 
-from .enums import ImportMethod
 from .events import Event
 from .force_platforms import EZC3DForcePlatform
 from .time_series import Analogs, Points
+from sqlmodel import SQLModel, Field, Relationship, SQLModel, JSON, Column
 
 # Define a TypeVar that is bound by the Trial class itself
 _T = TypeVar("_T", bound="Trial")
 
-
+class TrialBase(SQLModel):
+    name: str
+    session_name: str | None = None
+    subject_names: list[str] | str | None = Field(sa_column=Column(JSON))
+    classification: str = ""
+    
 class Trial(BaseModel):
-    """
-    Main trial data container with improved separation of concerns.
-    File I/O and OpenSim operations are handled by separate classes.
-    """
 
     # Trial Metadata
     name: str
     session_name: str | None = None
     subject_names: list[str] | str | None = None
     classification: str = ""
-    trial_type: str | None = None
-    import_method: ImportMethod
     linked_files: dict[str, str] = (
         {}
     )  # Map of associated files, e.g. C3D file path, etc.
