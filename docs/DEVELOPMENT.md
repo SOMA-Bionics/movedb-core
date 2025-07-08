@@ -3,6 +3,7 @@
 ## Quick Start for Testing
 
 ### 1. Create and Activate Development Environment
+
 ```bash
 # Clone the repository
 git clone https://github.com/SOMA-Bionics/movedb-core.git
@@ -19,11 +20,13 @@ conda install -c conda-forge -c opensim-org pytest pytest-cov black flake8 mypy 
 ```
 
 ### 2. Install Package in Development Mode
+
 ```bash
 pip install -e .
 ```
 
 ### 3. Run Tests
+
 ```bash
 # Run all tests
 pytest
@@ -45,6 +48,7 @@ pytest -k "test_trial" -v
 ```
 
 ### 4. Common Test Commands
+
 ```bash
 # Quick test run (no coverage)
 pytest --no-cov
@@ -62,6 +66,7 @@ pytest -n auto
 ## Code Quality and Linting
 
 ### 5. Run Linting Checks
+
 The project uses several tools to maintain code quality:
 
 ```bash
@@ -83,12 +88,14 @@ make isort-check   # Check import sorting
 ```
 
 ### Linting Tools Used
+
 - **Black**: Code formatter (127 char line length)
 - **isort**: Import sorter (Black-compatible profile)
 - **flake8**: Code style linter (ignores E203 for Black compatibility)
 - **mypy**: Static type checker
 
 ### Pre-commit Workflow
+
 ```bash
 # Before committing, run:
 make pre-commit  # This runs linting + quick tests
@@ -99,13 +106,16 @@ make test-quick  # Run tests without coverage
 ```
 
 ### Configuration Files
+
 - `setup.cfg` - flake8 configuration
 - `pyproject.toml` - black, isort, mypy, pytest configuration
 
 ## Testing Best Practices
 
 ### Import Style for Tests
+
 Use explicit submodule imports in tests:
+
 ```python
 # Recommended for tests
 from movedb.core import Trial, Event, Points, Analogs
@@ -116,12 +126,14 @@ from movedb import Trial, Event  # Still works but less clear
 ```
 
 ### Test File Organization
+
 - `tests/test_basic.py` - Basic functionality and imports
 - `tests/test_core/` - Core functionality tests
 - `tests/test_file_io/` - File I/O tests
 - `tests/test_integration/` - Integration tests
 
 ### Writing Tests
+
 ```python
 import pytest
 from movedb.core import Trial, Event
@@ -140,6 +152,7 @@ def test_example_with_fixtures():
 ## CI/CD Integration
 
 Tests and linting are automatically run on:
+
 - Pull requests
 - Push to main branch
 - Release creation
@@ -194,12 +207,14 @@ Run `make help` to see all available commands.
 ## Troubleshooting
 
 ### Common Issues
+
 1. **Import errors**: Make sure package is installed with `pip install -e .`
 2. **Missing dependencies**: Run `conda env update -f environment.yml` or install required packages
 3. **Test failures**: Check that you're in a conda environment with pytest installed
 4. **Environment name**: The test runner works with any conda environment that has the required dependencies
 
 ### Environment Issues
+
 ```bash
 # Recreate environment if needed
 conda env remove -n movedb-core-dev  # or your environment name
@@ -217,7 +232,9 @@ pip install -e .
 ```
 
 ### Coverage Issues
+
 If coverage isn't working:
+
 ```bash
 # Install coverage dependencies
 conda install pytest-cov coverage
@@ -226,6 +243,7 @@ conda install pytest-cov coverage
 ## VSCode Integration
 
 Add to your VSCode `settings.json`:
+
 ```json
 {
     "python.testing.pytestEnabled": true,

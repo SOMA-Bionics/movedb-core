@@ -5,6 +5,7 @@ This guide walks through the process of submitting movedb-core to conda-forge, m
 ## Overview
 
 Conda-forge is a community-driven collection of conda recipes. Getting your package accepted involves:
+
 1. **Preparation** - Ensure your package meets requirements
 2. **Recipe Creation** - Adapt your conda recipe for conda-forge standards
 3. **Submission** - Submit via staged-recipes repository
@@ -14,6 +15,7 @@ Conda-forge is a community-driven collection of conda recipes. Getting your pack
 ## Prerequisites Checklist
 
 ✅ **Package Requirements**:
+
 - [x] Open source license (MIT ✓)
 - [x] Public repository on GitHub ✓
 - [x] Stable API and documentation ✓
@@ -22,6 +24,7 @@ Conda-forge is a community-driven collection of conda recipes. Getting your pack
 - [x] Clear license file ✓
 
 ✅ **Technical Requirements**:
+
 - [x] Works on multiple platforms (noarch: python ✓)
 - [x] Well-defined dependencies ✓
 - [x] Proper version management ✓
@@ -30,20 +33,26 @@ Conda-forge is a community-driven collection of conda recipes. Getting your pack
 ## Step 1: Prepare Your Package
 
 ### 1.1 Ensure Package Stability
+
 Your package should be in a reasonably stable state:
+
 - ✅ Version 0.1.3+ (good starting point)
 - ✅ Working CI/CD
 - ✅ Documentation
 - ✅ Test coverage
 
 ### 1.2 Review Dependencies
+
 All dependencies must be available on conda-forge or other conda channels:
+
 - ✅ `python`, `numpy`, `polars`, `pydantic`, `loguru` - Available on conda-forge
 - ✅ `ezc3d` - Available on conda-forge
 - ✅ `opensim` - Available on opensim-org channel (acceptable)
 
 ### 1.3 Prepare Release
+
 Create a proper release on GitHub:
+
 ```bash
 # Bump to a stable version
 make bump-version VERSION=1.0.0
@@ -53,15 +62,18 @@ git push origin v1.0.0
 ## Step 2: Create Conda-forge Recipe
 
 ### 2.1 Fork staged-recipes Repository
-1. Go to https://github.com/conda-forge/staged-recipes
+
+1. Go to <https://github.com/conda-forge/staged-recipes>
 2. Fork the repository to your GitHub account
 3. Clone your fork:
+
 ```bash
 git clone https://github.com/YOUR_USERNAME/staged-recipes.git
 cd staged-recipes
 ```
 
 ### 2.2 Create Recipe Directory
+
 ```bash
 # Create recipe directory
 mkdir recipes/movedb-core
@@ -69,6 +81,7 @@ cd recipes/movedb-core
 ```
 
 ### 2.3 Adapt meta.yaml for Conda-forge
+
 Create `meta.yaml` based on your current recipe but adapted for conda-forge standards:
 
 ```yaml
@@ -142,7 +155,9 @@ extra:
 ## Step 3: Submission Process
 
 ### 3.1 Get SHA256 Hash
+
 If publishing to PyPI first:
+
 ```bash
 # After uploading to PyPI, get the hash
 wget https://pypi.io/packages/source/m/movedb-core/movedb_core-1.0.0.tar.gz
@@ -150,6 +165,7 @@ sha256sum movedb_core-1.0.0.tar.gz
 ```
 
 Or for GitHub release:
+
 ```bash
 # Download GitHub release tarball
 wget https://github.com/SOMA-Bionics/movedb-core/archive/v1.0.0.tar.gz
@@ -157,6 +173,7 @@ sha256sum v1.0.0.tar.gz
 ```
 
 ### 3.2 Test Recipe Locally
+
 ```bash
 # Install conda-build
 conda install conda-build
@@ -171,6 +188,7 @@ python -c "import movedb; print(movedb.__version__)"
 ```
 
 ### 3.3 Submit Pull Request
+
 ```bash
 # Add and commit your recipe
 git add recipes/movedb-core/
@@ -183,19 +201,24 @@ git push origin main
 ## Step 4: Review Process
 
 ### 4.1 Automated Checks
+
 The conda-forge bot will run automated checks:
+
 - Recipe linting
 - Build tests on multiple platforms
 - Dependency verification
 
 ### 4.2 Community Review
+
 Maintainers will review your PR and may request changes:
+
 - Recipe improvements
 - Dependency clarifications
 - Documentation updates
 - Test enhancements
 
 ### 4.3 Common Feedback Areas
+
 - **Dependencies**: Ensure all deps are from conda-forge when possible
 - **Licensing**: Clear license file and metadata
 - **Testing**: Adequate test coverage in recipe
@@ -204,20 +227,26 @@ Maintainers will review your PR and may request changes:
 ## Step 5: Post-Acceptance
 
 ### 5.1 Feedstock Creation
+
 Once accepted, conda-forge will:
+
 - Create a dedicated feedstock repository
 - Set up automated builds
 - Grant you maintainer access
 
 ### 5.2 Ongoing Maintenance
+
 As a maintainer, you'll be responsible for:
+
 - Updating the recipe for new versions
 - Responding to build failures
 - Updating dependencies
 - Handling user issues
 
 ### 5.3 Version Updates
+
 Update process for new versions:
+
 1. Bot creates PR for version bump
 2. Review and merge the PR
 3. New packages are built automatically
@@ -227,6 +256,7 @@ Update process for new versions:
 If you want to test the waters first:
 
 ### 1. Perfect Your Current Setup
+
 ```bash
 # Build and test extensively
 make build
@@ -237,22 +267,26 @@ anaconda upload dist/conda/**/*.conda
 ```
 
 ### 2. Gather User Feedback
+
 - Share with potential users
 - Fix any issues
 - Build confidence in the package
 
 ### 3. Submit to Conda-forge Later
+
 Once you have a stable user base and proven track record.
 
 ## Benefits of Conda-forge
 
 ### For Users
+
 - **Trusted source**: Users trust conda-forge packages
 - **Easy installation**: `conda install -c conda-forge movedb-core`
 - **Better discovery**: Listed in conda-forge package index
 - **Dependency management**: Better integration with other packages
 
 ### For Maintainers
+
 - **Automated builds**: CI/CD for multiple platforms
 - **Community support**: Help from conda-forge maintainers
 - **Version management**: Automated update PRs

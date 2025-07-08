@@ -7,6 +7,7 @@ The `movedb-core` project includes automated version bumping tools to ensure con
 ## Version Bumping Script
 
 The `bump_version.py` script automatically updates version numbers in:
+
 - `src/movedb/__init__.py` - Main package version
 - `pyproject.toml` - Package metadata
 - `conda-recipe/meta.yaml` - Conda package recipe
@@ -58,6 +59,7 @@ make release-major   # Major release
 ## Typical Release Workflow
 
 ### For Patch Releases (Bug fixes)
+
 ```bash
 # 1. Bump version and create tag
 make release-patch
@@ -70,6 +72,7 @@ conda upload dist/conda/noarch/movedb-core-*-*.conda
 ```
 
 ### For Minor Releases (New features)
+
 ```bash
 # 1. Bump version and create tag
 make release-minor
@@ -82,6 +85,7 @@ conda upload dist/conda/noarch/movedb-core-*-*.conda
 ```
 
 ### For Major Releases (Breaking changes)
+
 ```bash
 # 1. Bump version and create tag
 make release-major
@@ -124,11 +128,13 @@ conda upload dist/conda/noarch/movedb-core-$VERSION-*.conda
 ## Version Management Best Practices
 
 ### Semantic Versioning
+
 - **Patch** (x.y.Z): Bug fixes, no API changes
 - **Minor** (x.Y.0): New features, backward compatible
 - **Major** (X.0.0): Breaking changes, API changes
 
 ### Pre-Release Checklist
+
 - [ ] All tests pass: `make test`
 - [ ] Code is formatted: `make format`
 - [ ] Linting passes: `make lint`
@@ -136,6 +142,7 @@ conda upload dist/conda/noarch/movedb-core-$VERSION-*.conda
 - [ ] CHANGELOG is updated (if maintained)
 
 ### Release Checklist
+
 - [ ] Version bumped: `make bump-*` or `make release-*`
 - [ ] Git tag created and pushed
 - [ ] Package builds successfully: `make build`
@@ -145,20 +152,26 @@ conda upload dist/conda/noarch/movedb-core-$VERSION-*.conda
 ## Troubleshooting
 
 ### Version Mismatch
+
 If you see version mismatches, run the version bump script again:
+
 ```bash
 python bump_version.py $(python -c 'import sys; sys.path.insert(0, "src"); import movedb; print(movedb.__version__)')
 ```
 
 ### Package Already Exists
+
 If conda upload fails with "package already exists":
+
 1. Check your version: `python -c 'import sys; sys.path.insert(0, "src"); import movedb; print(movedb.__version__)'`
 2. Bump to a new version: `make bump-patch`
 3. Rebuild: `make build`
 4. Upload again: `conda upload ...`
 
 ### Git Tag Conflicts
+
 If git tag creation fails:
+
 ```bash
 # List existing tags
 git tag -l
@@ -173,6 +186,7 @@ git push origin :refs/tags/v1.2.3
 ## Integration with CI/CD
 
 The version management integrates with GitHub Actions:
+
 - Tags trigger release workflows
 - Consistent versions across all files
 - Automated package building on tags
@@ -180,6 +194,7 @@ The version management integrates with GitHub Actions:
 ## Files Updated by Version Bumping
 
 The script automatically updates:
+
 1. **`src/movedb/__init__.py`** - `__version__ = "x.y.z"`
 2. **`pyproject.toml`** - `version = "x.y.z"`
 3. **`conda-recipe/meta.yaml`** - `{% set version = "x.y.z" %}`

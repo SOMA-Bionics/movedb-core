@@ -46,28 +46,34 @@ conda install -c hudsonburke -c dev movedb-core
 ### Option 2: Development Installation
 
 #### Prerequisites
+
 - conda or miniconda installed
 - Git
 
 #### Steps
+
 1. **Clone the repository**:
+
    ```bash
    git clone https://github.com/SOMA-Bionics/movedb-core.git
    cd movedb-core
    ```
 
 2. **Create conda environment**:
+
    ```bash
    conda env create -f environment.yml
    conda activate movedb-core-dev
    ```
 
 3. **Install package in development mode**:
+
    ```bash
    pip install -e .
    ```
 
 4. **Verify installation**:
+
    ```bash
    python -c "import movedb; print(f'movedb version: {movedb.__version__}')"
    ```
@@ -112,12 +118,14 @@ print(f'Version: {movedb.__version__}')
 If you're developing movedb-core:
 
 ### Install Development Dependencies
+
 ```bash
 # Already included in environment.yml
 conda install -c conda-forge pytest pytest-cov black isort flake8 mypy
 ```
 
 ### Available Commands
+
 ```bash
 # Run tests
 make test
@@ -137,19 +145,25 @@ make help
 ### Common Issues
 
 #### ImportError: No module named 'ezc3d'
+
 **Solution**: Use conda installation. ezc3d is not available on PyPI.
+
 ```bash
 conda install -c conda-forge ezc3d
 ```
 
 #### ImportError: No module named 'opensim'
+
 **Solution**: Install OpenSim from opensim-org channel.
+
 ```bash
 conda install -c opensim-org opensim
 ```
 
 #### Version conflicts
+
 **Solution**: Use a clean conda environment.
+
 ```bash
 conda create -n clean-movedb python=3.11
 conda activate clean-movedb
@@ -159,25 +173,30 @@ conda install -c hudsonburke movedb-core
 ### Platform-Specific Notes
 
 #### Windows
+
 - Use Anaconda Prompt or PowerShell
 - Some OpenSim features may require Visual C++ Redistributable
 
 #### macOS
+
 - Works with both Intel and Apple Silicon
 - May need Xcode command line tools for some dependencies
 
 #### Linux
+
 - Tested on Ubuntu 20.04+ and CentOS 7+
 - May need system packages for graphics (if using GUI features)
 
 ## Building from Source
 
 ### Prerequisites
+
 ```bash
 conda install -c conda-forge conda-build conda-verify
 ```
 
 ### Build Process
+
 ```bash
 # Build conda package
 ./scripts/build_conda.sh
@@ -190,6 +209,7 @@ conda install dist/conda/**/*.conda
 ```
 
 ### Upload to Anaconda.org
+
 ```bash
 # Install anaconda-client
 conda install anaconda-client
@@ -201,9 +221,11 @@ anaconda upload dist/conda/**/*.conda
 ## Environment Files
 
 ### environment.yml
+
 Complete development environment with all dependencies.
 
 ### conda-recipe/meta.yaml
+
 Conda package recipe for building distribution packages.
 
 ## Support
@@ -215,6 +237,7 @@ Conda package recipe for building distribution packages.
 ## Next Steps
 
 After installation:
+
 1. Read the main [README.md](../README.md) for usage examples
 2. Check out [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md) for development guidelines
 3. See example notebooks in `notebooks/` directory

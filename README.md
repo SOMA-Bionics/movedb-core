@@ -32,14 +32,22 @@ conda install -c hudsonburke movedb-core
 
 **Note**: We strongly recommend using conda, as `opensim` is not available on PyPI.
 
-
 ### From PyPI (Limited Support)
 
 ```bash
-# WARNING: opensim is only available via conda
-# You'll need to manually compile these dependencies
+# Install core package (OpenSim features will be disabled)
 pip install movedb-core
+
+# To use OpenSim features, install OpenSim separately via conda:
+# Note: OpenSim requires Python 3.7-3.12 (not 3.13+)
+conda install -c opensim-org opensim
 ```
+
+⚠️ **Important**:
+
+- OpenSim is not available on PyPI and must be installed via conda
+- OpenSim only supports Python 3.7-3.12 (not compatible with Python 3.13+)
+- If you're using Python 3.13+, you'll need a separate environment for OpenSim features
 
 ### From Source
 
@@ -53,11 +61,52 @@ conda activate movedb-core-dev
 pip install -e .
 ```
 
+### OpenSim with Python 3.13+
+
+If you're using Python 3.13 or later, OpenSim is not compatible. You have two options:
+
+**Option 1: Separate Environment for OpenSim Features**
+
+```bash
+# Quick setup using our OpenSim environment file:
+conda env create -f environment-opensim.yml
+conda activate movedb-opensim
+
+# Or manually:
+conda create -n movedb-opensim python=3.12
+conda activate movedb-opensim
+pip install movedb-core
+conda install -c opensim-org opensim
+
+# Or use our setup script:
+./scripts/setup_opensim_env.sh
+
+# Use your main Python 3.13+ environment for non-OpenSim work
+conda activate your-main-env
+pip install movedb-core  # OpenSim features will be disabled
+```
+
+**Option 2: Use movedb-core without OpenSim**
+
+```bash
+# Install in your Python 3.13+ environment
+pip install movedb-core
+# All features work except OpenSim export (TRC, MOT, XML)
+```
+
+**Testing Your Setup**
+
+```bash
+# Test your installation and check OpenSim availability:
+python examples/opensim_example.py
+```
+
 For detailed installation instructions, see [docs/INSTALL.md](docs/INSTALL.md).
 
 ## Documentation
 
 📚 **Complete documentation is available in [docs/README.md](docs/README.md)**, including:
+
 - Installation guide and development setup
 - API design and architecture
 - Testing and code quality guidelines  
@@ -96,6 +145,7 @@ The `movedb` package is organized into logical submodules for clear separation o
 - `movedb.utils`: Utility functions
 
 You can import classes using explicit submodule imports:
+
 ```python
 from movedb.core import Trial, Event, Points, Analogs
 from movedb.file_io import C3DLoader, OpenSimExporter
@@ -106,6 +156,7 @@ This approach provides clear API structure and supports future expansion (e.g., 
 ## Development
 
 ### Quick Development Setup
+
 ```bash
 # Clone and set up environment
 git clone https://github.com/SOMA-Bionics/movedb-core.git
@@ -116,6 +167,7 @@ pip install -e .
 ```
 
 ### Running Tests
+
 ```bash
 # Quick test run
 make test-quick
@@ -134,6 +186,7 @@ python scripts/run_tests.py
 ```
 
 ### Code Quality
+
 ```bash
 # Run all linting checks (like CI)
 make lint
@@ -146,6 +199,7 @@ make pre-commit
 ```
 
 ### Available Make Commands
+
 - `make test` - Run all tests with coverage
 - `make test-quick` - Run tests without coverage (faster)
 - `make lint` - Run all linting checks (black, isort, flake8, mypy)
@@ -169,13 +223,20 @@ See [`docs/README.md`](docs/README.md) for a complete documentation index, inclu
 
 ## Requirements
 
-- Python 3.8+
+- Python 3.8+ (3.8-3.12 recommended for OpenSim compatibility)
 - numpy >= 1.20.0
 - polars >= 0.20.0
 - pydantic >= 2.0.0
 - loguru >= 0.6.0
 - ezc3d >= 1.5.0
-- opensim >= 4.0.0 *(opensim-org only)*
+
+### Optional Dependencies
+
+- opensim >= 4.0.0 *(available via conda only)*
+  - Required for OpenSim export features (TRC, MOT, XML)
+  - **Python compatibility**: OpenSim supports Python 3.7-3.12 (not 3.13+)
+  - Install with: `conda install -c opensim-org opensim`
+  - If using Python 3.13+, create a separate environment with Python ≤3.12
 
 ## Development
 
@@ -199,6 +260,7 @@ pip install -e ".[dev]"
 ### Building and Packaging
 
 Build conda package locally:
+
 ```bash
 # Install build dependencies
 conda install -c conda-forge conda-build conda-verify
@@ -211,6 +273,7 @@ conda-verify dist/conda/**/*.conda
 ```
 
 The CI/CD workflow automatically builds and uploads conda packages to Anaconda.org:
+
 - **Tagged releases** (e.g., `v1.0.0`) → Main channel
 - **Main branch pushes** → Development channel (`--label dev`)
 
@@ -232,11 +295,13 @@ For more details, see [docs/CONDA_PACKAGING.md](docs/CONDA_PACKAGING.md).
 ### Testing and Quality
 
 Run tests:
+
 ```bash
 pytest
 ```
 
 Run linting and formatting:
+
 ```bash
 make lint        # Check code quality
 make lint-fix    # Fix formatting issues

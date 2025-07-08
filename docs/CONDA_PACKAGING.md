@@ -28,6 +28,7 @@ The conda package is defined in `conda-recipe/meta.yaml`:
 ### Build Configuration
 
 `conda-recipe/conda_build_config.yaml` defines:
+
 - Supported Python versions (3.8-3.12)
 - Build matrix configuration
 - Channel priorities
@@ -39,11 +40,13 @@ The conda package is defined in `conda-recipe/meta.yaml`:
 The CI/CD workflow (`/.github/workflows/ci-cd.yml`) includes two distribution jobs:
 
 #### 1. Release Job (Tagged Releases)
+
 - **Trigger**: Git tags matching `v*` (e.g., `v1.0.0`)
 - **Action**: Uploads to main channel on Anaconda.org
 - **Installation**: `conda install -c YOUR_USERNAME movedb-core`
 
 #### 2. Upload Job (Main Branch)
+
 - **Trigger**: Pushes to `main` branch
 - **Action**: Uploads to `dev` channel on Anaconda.org
 - **Installation**: `conda install -c YOUR_USERNAME -c dev movedb-core`
@@ -56,6 +59,7 @@ Configure these secrets in your GitHub repository settings:
 2. **ANACONDA_API_TOKEN**: API token with upload permissions
 
 #### Creating an API Token
+
 1. Go to [anaconda.org](https://anaconda.org)
 2. Log in and go to Settings → Access → API tokens
 3. Create a new token with upload permissions
@@ -64,6 +68,7 @@ Configure these secrets in your GitHub repository settings:
 ### Setup Helper
 
 Use the automated setup script:
+
 ```bash
 ./scripts/setup_anaconda_integration.sh
 ```
@@ -73,21 +78,26 @@ Use the automated setup script:
 ### Automatic Distribution
 
 #### Tagged Releases → Main Channel
+
 ```bash
 git tag v1.0.0
 git push origin v1.0.0
 ```
+
 → Automatically uploads to main channel (ready for conda-forge submission!)
 
 #### Main Branch → Dev Channel
+
 ```bash
 git push origin main
 ```
+
 → Automatically uploads to dev channel for testing
 
 ### Usage
 
 #### For End Users
+
 ```bash
 # Stable releases (recommended)
 conda install -c YOUR_USERNAME movedb-core
@@ -172,6 +182,7 @@ make clean-conda         # Clean build artifacts
 The Makefile provides several commands for building and uploading conda packages:
 
 **Build Commands:**
+
 | Command | Purpose |
 |---------|---------|
 | `make build` | Build conda package locally |
@@ -179,18 +190,21 @@ The Makefile provides several commands for building and uploading conda packages
 | `./scripts/validate_package.sh` | Package validation |
 
 **Upload Commands:**
+
 | Command | Purpose |
 |---------|---------|
 | `make upload-conda` | Upload existing package to main channel |
 | `make upload-conda-dev` | Upload existing package to dev channel |
 
 **Combined Commands (Build + Upload):**
+
 | Command | Purpose |
 |---------|---------|
 | `make build-upload` | Build and upload to main channel (combines build + upload) |
 | `make build-upload-dev` | Build and upload to dev channel (combines build + upload) |
 
 **Utility Commands:**
+
 | Command | Purpose |
 |---------|---------|
 | `make clean-conda` | Clean build artifacts |

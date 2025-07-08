@@ -5,25 +5,31 @@ This directory contains comprehensive documentation for movedb-core.
 ## Quick Navigation
 
 ### 📦 Installation & Setup
+
 - **[INSTALL.md](INSTALL.md)** - Complete installation guide
 - **[DEVELOPMENT.md](DEVELOPMENT.md)** - Developer setup and workflow
 
 ### 🔧 Development
+
 - **[ROADMAP_V1.md](ROADMAP_V1.md)** - Version 1.0.0 roadmap and timeline
 - **[LINTING.md](LINTING.md)** - Code quality and linting guide
 - **[VERSION_MANAGEMENT.md](VERSION_MANAGEMENT.md)** - Version bumping and release process
 
 ### 🚚 Packaging & Distribution
+
 - **[CONDA_PACKAGING.md](CONDA_PACKAGING.md)** - Complete conda packaging and distribution guide
 - **[CONDA_FORGE_SUBMISSION.md](CONDA_FORGE_SUBMISSION.md)** - How to submit to conda-forge
 
 ### 🏗️ Design & Architecture
+
 - **[API_DESIGN.md](API_DESIGN.md)** - API design principles and structure
 
 ### 🔄 CI/CD & Automation
+
 - **[GITHUB_ACTIONS.md](GITHUB_ACTIONS.md)** - Complete GitHub Actions CI/CD guide
 
 ### 🧪 Testing
+
 - **[PYTEST_SETUP.md](PYTEST_SETUP.md)** - Complete testing guide and setup
 
 ## Getting Started
@@ -57,6 +63,7 @@ All documentation follows automated standards enforced by CI:
 ### Automated Enforcement
 
 Documentation quality is maintained through:
+
 - **CI Pipeline**: markdownlint runs on every PR and push
 - **Local Development**: `make lint-docs` checks documentation locally
 - **Auto-fixing**: `make lint-docs-fix` automatically fixes common issues

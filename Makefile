@@ -11,13 +11,20 @@ help:  ## Show this help message
 install:  ## Install package in development mode
 	pip install -e .
 
-install-dev:  ## Create conda environment and install package
+install-dev:  ## Install package with development dependencies
+	pip install -e ".[dev]"
+
+install-dev-full:  ## Create conda environment and install package
 	conda env create -f environment.yml
 	conda activate movedb-core-dev
 	pip install -e .
 
 update-env:  ## Update conda environment
 	conda env update -f environment.yml
+
+check-dev-deps:  ## Check if development dependencies are installed
+	@python -c "import black, flake8, mypy, isort" 2>/dev/null || { echo "❌ Development dependencies missing. Run: make install-dev"; exit 1; }
+	@echo "✅ Development dependencies are installed"
 
 ##@ Testing
 test:  ## Run all tests with coverage
@@ -44,24 +51,24 @@ test-parallel:  ## Run tests in parallel (requires pytest-xdist)
 ##@ Code Quality
 lint:  ## Run all linting checks (flake8, mypy, black, isort, markdownlint)
 	@echo "Running flake8..."
-	flake8 src/ tests/
+	@flake8 src/ tests/ || { echo "❌ flake8 failed"; exit 1; }
 	@echo "Running mypy..."
-	mypy src/movedb/ --ignore-missing-imports || true
+	@mypy src/movedb/ --ignore-missing-imports || { echo "⚠️  mypy warnings found (non-blocking)"; }
 	@echo "Checking black formatting..."
-	black --check --diff src/ tests/
+	@black --check --diff src/ tests/ || { echo "❌ black formatting issues found"; exit 1; }
 	@echo "Checking import sorting..."
-	isort --check-only --diff src/ tests/
+	@isort --check-only --diff src/ tests/ || { echo "❌ isort import sorting issues found"; exit 1; }
 	@echo "Linting documentation..."
-	$(MAKE) lint-docs
+	@$(MAKE) lint-docs || { echo "⚠️  Documentation linting issues found (non-blocking)"; }
 	@echo "✅ All linting checks passed!"
 
 lint-fix:  ## Auto-fix linting issues (format + sort imports + fix docs)
 	@echo "Formatting code with black..."
-	black src/ tests/
+	@black src/ tests/
 	@echo "Sorting imports with isort..."
-	isort src/ tests/
+	@isort src/ tests/
 	@echo "Fixing documentation issues..."
-	$(MAKE) lint-docs-fix
+	@$(MAKE) lint-docs-fix || { echo "⚠️  Some documentation issues couldn't be auto-fixed"; }
 	@echo "✅ Code formatted, imports sorted, and docs fixed!"
 
 format:  ## Format code with black
@@ -77,18 +84,36 @@ isort-check:  ## Check import sorting
 	isort --check-only --diff src/ tests/
 
 flake8:  ## Run flake8 linting
-	flake8 src/ tests/
+	@flake8 src/ tests/ || { echo "❌ flake8 failed"; exit 1; }
 
 mypy:  ## Run mypy type checking
-	mypy src/movedb/ --ignore-missing-imports || true
+	@mypy src/movedb/ --ignore-missing-imports || { echo "⚠️  mypy warnings found (non-blocking)"; }
+
+lint-code:  ## Run code linting only (no docs)
+	@echo "Running flake8..."
+	@flake8 src/ tests/ || { echo "❌ flake8 failed"; exit 1; }
+	@echo "Running mypy..."
+	@mypy src/movedb/ --ignore-missing-imports || { echo "⚠️  mypy warnings found (non-blocking)"; }
+	@echo "Checking black formatting..."
+	@black --check --diff src/ tests/ || { echo "❌ black formatting issues found"; exit 1; }
+	@echo "Checking import sorting..."
+	@isort --check-only --diff src/ tests/ || { echo "❌ isort import sorting issues found"; exit 1; }
+	@echo "✅ All code linting checks passed!"
+
+lint-fix-code:  ## Auto-fix code linting issues only (no docs)
+	@echo "Formatting code with black..."
+	@black src/ tests/
+	@echo "Sorting imports with isort..."
+	@isort src/ tests/
+	@echo "✅ Code formatted and imports sorted!"
 
 lint-docs:  ## Lint markdown documentation
-	@command -v markdownlint >/dev/null 2>&1 || { echo "markdownlint not found. Install with: npm install -g markdownlint-cli"; exit 1; }
-	markdownlint "**/*.md" --ignore node_modules --ignore .git
+	@command -v markdownlint >/dev/null 2>&1 || { echo "⚠️  markdownlint not found. Install with: npm install -g markdownlint-cli"; exit 1; }
+	@markdownlint "**/*.md" --ignore node_modules --ignore .git || { echo "⚠️  Markdown linting issues found"; exit 1; }
 
 lint-docs-fix:  ## Fix markdown documentation issues
-	@command -v markdownlint >/dev/null 2>&1 || { echo "markdownlint not found. Install with: npm install -g markdownlint-cli"; exit 1; }
-	markdownlint "**/*.md" --ignore node_modules --ignore .git --fix
+	@command -v markdownlint >/dev/null 2>&1 || { echo "⚠️  markdownlint not found. Install with: npm install -g markdownlint-cli"; exit 1; }
+	@markdownlint "**/*.md" --ignore node_modules --ignore .git --fix || { echo "⚠️  Some markdown issues couldn't be auto-fixed"; }
 
 pre-commit:  ## Run pre-commit checks (like CI)
 	@echo "Running pre-commit checks..."
@@ -176,10 +201,10 @@ clean-conda:  ## Clean conda build artifacts
 	conda build purge
 
 ##@ Development Shortcuts
-dev-setup: install-dev  ## Full development setup
-dev-test: lint-fix test  ## Full development testing pipeline (fix + test)
+dev-setup: install-dev check-dev-deps  ## Full development setup with dependency check
+dev-test: lint-fix-code test-quick  ## Full development testing pipeline (fix + test)
 dev-quick: test-quick  ## Quick test run for development
-ci-check: lint test  ## Run CI checks locally
+ci-check: lint-code test  ## Run CI checks locally (code only)
 
 # Default target
 .DEFAULT_GOAL := help

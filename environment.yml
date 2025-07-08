@@ -3,7 +3,7 @@ channels:
   - conda-forge
   - defaults
 dependencies:
-  - python>=3.8
+  - python>=3.8,<3.13  # OpenSim requires Python <3.13
   - opensim-org::opensim>=4.0.0
   - numpy>=1.20.0
   - polars>=0.20.0
@@ -27,3 +27,4 @@ dependencies:
   - nodejs  # For markdownlint
   - pip:
     - isort  # Not available in conda-forge for latest version
+  - markdownlint-cli

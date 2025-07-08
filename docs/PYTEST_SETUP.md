@@ -3,6 +3,7 @@
 ## ✅ Complete Testing Setup
 
 ### 1. **Comprehensive Environment Configuration**
+
 - `environment.yml` includes all testing dependencies (pytest, pytest-cov, black, etc.)
 - `pyproject.toml` has comprehensive pytest configuration with:
   - Coverage settings
@@ -13,6 +14,7 @@
 ### 2. **Flexible Test Running Options**
 
 #### **Makefile Commands** (recommended approach)
+
 ```bash
 make test-quick        # Fast tests without coverage
 make test             # Full test suite with coverage
@@ -25,6 +27,7 @@ make help             # Show all commands
 ```
 
 #### **Python Test Runner** (`run_tests.py`)
+
 ```bash
 python run_tests.py            # Run all tests with coverage
 python run_tests.py --help     # Show help
@@ -33,6 +36,7 @@ python run_tests.py -k imports # Pattern matching
 ```
 
 #### **Direct pytest Usage**
+
 ```bash
 pytest                         # Run all tests
 pytest --no-cov               # Skip coverage
@@ -43,6 +47,7 @@ pytest -k "imports" -v         # Pattern matching
 ## 🔧 Environment Flexibility
 
 ### **Works with Any Environment**
+
 The test runner no longer requires specific environment names. It works with:
 
 ```bash
@@ -61,15 +66,19 @@ conda install pytest pytest-cov  # add missing dependencies
 ```
 
 ### **Smart Environment Detection**
+
 The `run_tests.py` script now:
+
 - Detects any conda environment automatically
 - Warns about missing dependencies instead of failing
 - Checks for actual package availability
 - Provides helpful guidance when issues are found
 
 ## 🧪 Test Organization
+
 - VSCode settings documented in `docs/DEVELOPMENT.md`
 Tests are structured using explicit submodule imports:
+
 ```python
 # Recommended style for tests
 from movedb.core import Trial, Event
@@ -89,6 +98,7 @@ from movedb.file_io import C3DLoader
 ## 🚀 Quick Developer Onboarding
 
 New developers can get started with just:
+
 ```bash
 git clone https://github.com/SOMA-Bionics/movedb-core.git
 cd movedb-core
@@ -103,12 +113,14 @@ make test-quick
 ### **run_tests.py Enhancements**
 
 #### **What Was Fixed**
+
 - **Removed Hard-coded Environment Name**: No longer requires `'movedb-core-dev'` specifically
 - **Flexible Environment Checking**: Works with any conda environment
 - **Better Error Handling**: Warns instead of failing on environment issues
 - **Removed Conflicting Configuration**: Fixed duplicate `pytest.ini` file
 
 #### **How It Works Now**
+
 ```python
 import os
 def check_environment():
@@ -147,23 +159,27 @@ def check_environment():
 ## 🎯 Key Benefits
 
 ### ✅ **Flexible Environment Support**
+
 - Works with any conda environment that has the required dependencies
 - No hard-coded environment name requirements
 - Automatic dependency checking and helpful warnings
 
 ### ✅ **Multiple Testing Approaches**
+
 - Makefile commands for standard workflows
 - Python script for custom options
 - Direct pytest for advanced users
 - IDE integration for interactive development
 
 ### ✅ **Quality Assurance**
+
 - Comprehensive coverage reporting
 - Code formatting and linting
 - Type checking integration
 - Consistent tool configuration
 
 ### ✅ **Developer Experience**
+
 - Fast feedback with quick test options
 - Clear documentation and examples
 - Easy onboarding for new contributors

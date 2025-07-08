@@ -132,39 +132,38 @@ class Points(TimeSeriesGroup):
                 )
         return self
 
-    def to_df(self) -> pl.DataFrame:
+    def to_df(self, include_residual: bool = False) -> pl.DataFrame:
         """
         Convert the Points object to a Polars DataFrame.
-        Each marker's coordinates will be separate columns (marker_x, marker_y, marker_z, marker_residual).
+        Each marker's coordinates will be separate columns (marker_x, marker_y, marker_z,
+        marker_residual if include_residual is True).
         """
         if not self.trajectories:
             return pl.DataFrame()
 
         dfs = []
         for name, trajectory in self.trajectories.items():
-            marker_df = trajectory.prefix_columns(name)
-            dfs.append(marker_df)
-
-        # Add time column
-        time_df = pl.DataFrame({"time": self.time})
-
+            prefix = name
+            traj_df = trajectory.prefix_columns(prefix)
+            if not include_residual:
+                traj_df = traj_df.drop(f"{prefix}_residual")
+            dfs.append(traj_df)
         # Concatenate horizontally
-        all_dfs = [time_df] + dfs
-        return pl.concat(all_dfs, how="horizontal")
+        return pl.concat(dfs, how="horizontal")
 
-    def from_df(self, df: pl.DataFrame):
+    def to_dict(self, include_residual: bool = False) -> dict[str, np.ndarray]:
         """
-        Populate the Points object from a Polars DataFrame.
-        The DataFrame can only have columns: time, marker_x, marker_y, marker_z, marker_residual.
-        This will overwrite existing trajectories.
+        Convert the Points object to a dictionary of marker names to numpy arrays.
+        Each array will have shape (n_frames, 3) or (n_frames, 4) if include_residual is True.
         """
-        for col in df.columns:
-            if col.startswith("marker_"):
-                marker_name = col[7:]  # Remove 'marker_' prefix
-                self.trajectories[marker_name] = MarkerTrajectory(
-                    data=df[[col, f"{col}_y", f"{col}_z", f"{col}_residual"]],
-                    description=marker_name,
-                )
+        result = {}
+        for name, trajectory in self.trajectories.items():
+            coords = trajectory.coords
+            if include_residual:
+                residual = trajectory.residual.reshape(-1, 1)
+                coords = np.hstack((coords, residual))
+            result[name] = coords
+        return result
 
     def get_marker_coords(
         self, marker_name: str, frame: int | None = None
