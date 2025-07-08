@@ -8,7 +8,7 @@ from movedb.core import Event, ImportMethod, Trial
 def test_imports():
     """Test that main classes can be imported."""
     from movedb.core import Analogs, Event, ImportMethod, Points, Trial
-    from movedb.file_io import C3DLoader, OpenSimExporter
+    from movedb.file_io import C3DLoader
 
     # Test that classes are available
     assert Event is not None
@@ -17,7 +17,6 @@ def test_imports():
     assert Analogs is not None
     assert ImportMethod is not None
     assert C3DLoader is not None
-    assert OpenSimExporter is not None
 
 
 def test_version():

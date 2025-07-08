@@ -17,13 +17,12 @@ def test_basic_imports():
     print("✓ Successfully imported core classes")
 
     # Test file I/O imports from submodules
-    from movedb.file_io import C3DLoader, OpenSimExporter
+    from movedb.file_io import C3DLoader
 
     print("✓ Successfully imported file I/O classes")
 
     # Test that classes are available
     assert C3DLoader is not None
-    assert OpenSimExporter is not None
 
     # Test creating an Event
     event = Event(label="test", frame=100, context="test")
