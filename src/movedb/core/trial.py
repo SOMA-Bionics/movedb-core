@@ -233,7 +233,7 @@ class Trial(BaseModel):
         """
         import scipy.io as sio
         mat_dict = {}
-        info = {
+        mat_dict["Info"] = {
             "TrialName": self.name,
             "Session": self.session_name,
             "Subjects": self.subject_names,
@@ -241,9 +241,8 @@ class Trial(BaseModel):
             "CameraRate": self.points.rate,
             "SubjectParameters": self.parameters,
         }
-        mat_dict["Info"] = info
         
-        events = {
+        mat_dict["Events"] = {
             "TotalFrames": self.points.last_frame + 1 - self.points.first_frame,
             "RegionOfInterest": [
                 self.points.first_frame,
@@ -265,7 +264,6 @@ class Trial(BaseModel):
                 event.get_frame(self.points.rate) for event in self.get_events(context="General")
             ]
         }
-        mat_dict["Events"] = events
         
         mat_dict["Markers"] = self.points.to_dict(include_residual=False)
         
