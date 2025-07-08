@@ -240,6 +240,7 @@ class Trial(BaseModel):
             output_units=output_units,
             rotation=rotation,
         )
+        self.link_file("trc", filepath)        
 
     # TODO: figure out how to decouple from Trial class
     def export_force_platforms(

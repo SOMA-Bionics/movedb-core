@@ -126,6 +126,8 @@ conda install -c conda-forge pytest pytest-cov black isort flake8 mypy
 
 ### Available Commands
 
+#### Linux/macOS (using make)
+
 ```bash
 # Run tests
 make test
@@ -139,6 +141,44 @@ make build
 # Show all commands
 make help
 ```
+
+#### Windows (alternatives)
+
+**Option 1: Using our batch script**
+```cmd
+REM Run tests
+scripts\make.bat test
+
+REM Code quality checks
+scripts\make.bat lint
+
+REM Build conda package
+scripts\make.bat build
+
+REM Show all commands
+scripts\make.bat help
+```
+
+**Option 2: Using PowerShell script**
+```powershell
+# Run tests
+.\scripts\make.ps1 test
+
+# Code quality checks
+.\scripts\make.ps1 lint
+
+# Build conda package
+.\scripts\make.ps1 build
+
+# Show all commands
+.\scripts\make.ps1 help
+```
+
+**Option 3: Install make for Windows**
+- Install via [Chocolatey](https://chocolatey.org/): `choco install make`
+- Install via [Scoop](https://scoop.sh/): `scoop install make`
+- Install [Git for Windows](https://gitforwindows.org/) (includes make)
+- Use [Windows Subsystem for Linux (WSL)](https://docs.microsoft.com/en-us/windows/wsl/)
 
 ## Troubleshooting
 
@@ -176,6 +216,10 @@ conda install -c hudsonburke movedb-core
 
 - Use Anaconda Prompt or PowerShell
 - Some OpenSim features may require Visual C++ Redistributable
+- **Make command not available**: Use our provided scripts:
+  - `scripts\make.bat` (Command Prompt/PowerShell)
+  - `scripts\make.ps1` (PowerShell with advanced features)
+- Alternative: Install make via [Chocolatey](https://chocolatey.org/), [Scoop](https://scoop.sh/), or [Git for Windows](https://gitforwindows.org/)
 
 #### macOS
 
