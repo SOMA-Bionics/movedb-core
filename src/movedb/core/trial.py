@@ -227,7 +227,12 @@ class Trial(BaseModel):
 
     def to_mat(self, filepath: str):
         """
-        Export marker data to a .mat file.
+        Export trial data to a .mat file.
+        The structure of the .mat file will include:
+        - Info: Metadata about the trial, including name, session, subjects, classification, camera rate, and subject parameters.
+        - Events: A structure containing the total number of frames, region of interest, and lists of event frames for foot strikes, foot offs, and general events.
+        - Markers: A dictionary of marker data, excluding residuals.
+        - Analog: A dictionary of analog data, with keys modified to replace '.' with '_', and time as a separate list.
         Args:
             filepath (str): Path to save the .mat file.
         """
@@ -267,8 +272,12 @@ class Trial(BaseModel):
         
         mat_dict["Markers"] = self.points.to_dict(include_residual=False)
         
-        mat_dict["Analog"] = self.analogs.to_df().to_dict()
-        
+        # Convert analog keys to replace '.' with '_'
+        analog_dict = self.analogs.to_df().to_dict()
+        analog_dict = {k.replace('.', '_'): v for k, v in analog_dict.items()}
+        mat_dict["Analog"] = analog_dict
+        mat_dict["Analog"]["Time"] = self.analogs.time.tolist()
+
         sio.savemat(filepath, mat_dict)
 
     def to_trc(
