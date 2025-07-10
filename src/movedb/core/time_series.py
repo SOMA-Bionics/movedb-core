@@ -36,7 +36,7 @@ class TimeSeriesGroup(BaseModel):
         """
         Return a time vector for the time series group.
         """
-        return np.arange(self.first_frame, self.last_frame + 1) / self.rate
+        return np.arange(self.first_frame - 1, self.last_frame - 1) / self.rate
 
 
 class MarkerTrajectory(BaseModel):
@@ -212,11 +212,11 @@ class Points(TimeSeriesGroup):
 class AnalogChannel(BaseModel):
     """Each analog channel can have different units"""
 
-    units: str
     data: list[float]
-    description: str = ""
+    units: str = 'V'
     scale: float = 1.0
     offset: float = 0.0
+    description: str = ""
 
 
 class Analogs(TimeSeriesGroup):

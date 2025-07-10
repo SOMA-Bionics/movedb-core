@@ -14,16 +14,16 @@ from pydantic import BaseModel, model_validator
 from .events import Event
 from .force_platforms import EZC3DForcePlatform
 from .time_series import Analogs, Points
-from sqlmodel import SQLModel, Field, Relationship, SQLModel, JSON, Column
+# from sqlmodel import SQLModel, Field, Relationship, SQLModel, JSON, Column
 
 # Define a TypeVar that is bound by the Trial class itself
 _T = TypeVar("_T", bound="Trial")
 
-class TrialBase(SQLModel):
-    name: str
-    session_name: str | None = None
-    subject_names: list[str] | str | None = Field(sa_column=Column(JSON))
-    classification: str = ""
+# class TrialBase(SQLModel):
+#     name: str
+#     session_name: str | None = None
+#     subject_names: list[str] | str | None = Field(sa_column=Column(JSON))
+#     classification: str = ""
     
 class Trial(BaseModel):
 
